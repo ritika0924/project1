@@ -1,19 +1,9 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt"
+import express from "express"
+import {login,register,userprofile} from "../controllers/user.js"
+import { verifyLogin } from "../middlewares/index.js"
+const userRoute = express.Router()
+userRoute.post("/login",login)
+userRoute.post("/register",register)
+userRoute.get("/userprofile",verifyLogin,userprofile)
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: "Name is required" },
-  password: { type: String, required: "Password is required" },
-  email: {
-    type: String,
-    unique: true,
-  },
-  phone:Number,
-  image:String
-});
-userSchema.methods = {
-  verify: function (pass) {
-    return bcrypt.compareSync(pass, this.password);
-  },
-};
-export const User = mongoose.model("users", userSchema);
+export default userRoute
